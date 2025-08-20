@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doğum Günün Kutlu Olsun!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0a0f2c 0%, #000000 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #f8f8f8;
+    }
+
+    #background-number {
+      position: absolute;
+      top: 20%;
+      font-size: 30vw;
+      font-weight: 700;
+      color: rgba(255,255,255,0.05);
+      transform: rotate(-15deg);
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-align: center;
+      margin: 0;
+      padding: 0 10px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(0,150,255,0.6);
+      z-index: 10;
+      display: none;
+    }
+
+    #subtext {
+    display: none;
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    font-weight: 400;
+    text-align: center; /* hala ortalanmış */
+    margin-top: 10px;
+    text-shadow: 0 0 3px rgba(0,0,0,0.5);
+    z-index: 10;
+    padding: 0 15px;      /* sağ-sol boşluk ekler */
+    max-width: 90%;       /* ekranın %90’ını geçmesin */
+    word-wrap: break-word; /* uzun kelime taşmasını engeller */
+    }
+
+
+    #timer {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: 600;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+      z-index: 10;
+    }
+
+    #returnText {
+      font-size: 0.8rem;
+      color: #bbbbbb;
+      text-align: center;
+      margin-top: 5px;
+      z-index: 10;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      opacity: 0.9;
+      top: -10px;
+      animation: fall 5s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0.9;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="background-number"></div>
+  <div id="timer"></div>
+  <div id="returnText"></div>
+  <h1>Helal lan 18 oldun <span id="name"></span>🥳</h1>
+  <p id="subtext">wpden mesaj atacağıma bari böyle yapayım da mal mal süreyi bekle dedim<br>
+    doğum günün kutlu olsun nice mutlu senelere elif<br>
+    adam akıllı kod yazmayı öğrendiğimde daha düzgün bir şey yaparım söz 👍🏾
+  </p>
+
+  <script>
+    document.getElementById("name").textContent = "";
+
+    function createConfetti() {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      document.body.appendChild(confetti);
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+      confetti.style.animationDuration = (3 + Math.random()*2) + "s";
+      setTimeout(() => confetti.remove(), 5000);
+    }
+
+    // 21 Ağustos 00:00 hedef
+    function startCountdown(targetDate) {
+      const timerEl = document.getElementById("timer");
+      const returnEl = document.getElementById("returnText");
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          // hedef geçmişse direkt mesaj aç
+          timerEl.style.display = "none";
+          returnEl.style.display = "none";
+          showMessage();
+          clearInterval(interval);
+          return;
+        }
+
+        // geri sayım göster
+        timerEl.style.display = "block";
+        returnEl.style.display = "block";
+
+        const hours = Math.floor(diff / (1000*60*60));
+        const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((diff % (1000*60)) / 1000);
+
+        timerEl.textContent = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+      }
+
+      const interval = setInterval(updateCountdown, 1000);
+      updateCountdown();
+    }
+
+    function showMessage() {
+      const h1 = document.querySelector("h1");
+      const subtext = document.getElementById("subtext");
+      h1.style.display = "block";
+      subtext.style.display = "block";
+
+      const confettiInterval = setInterval(createConfetti, 100);
+      setTimeout(() => clearInterval(confettiInterval), 15000);
+    }
+
+    // 21 Ağustos 00:00 tarihi (sene olarak bu yılı alıyoruz)
+    const now = new Date();
+    const targetDate = new Date(now.getFullYear(), 7, 21, 0, 0, 0); // Ay: 0=Ocak, 7=Agustos
+    startCountdown(targetDate);
+  </script>
+</body>
+</html>
